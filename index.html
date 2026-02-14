@@ -129,7 +129,6 @@ button:hover{ transform:scale(1.05); }
     opacity:0;
     transform:scale(0.3);
     transition:all .4s ease;
-    user-select:none;
 }
 .heart-name span.show{
     opacity:1;
@@ -186,7 +185,7 @@ button:hover{ transform:scale(1.05); }
 <div id="stars"></div>
 <div id="floatingHearts"></div>
 
-<!-- 🎵 CANCIÓN -->
+<!-- Canción -->
 <audio id="musica" autoplay loop>
 <source src="the-reason.mp3" type="audio/mpeg">
 </audio>
@@ -215,9 +214,9 @@ button:hover{ transform:scale(1.05); }
 </div>
 
 <script>
+
 window.addEventListener("load", ()=>{
-    const musica=document.getElementById("musica");
-    musica.play().catch(()=>{});
+    document.getElementById("musica").play().catch(()=>{});
 });
 
 /* Estrellas */
@@ -229,7 +228,7 @@ for(let i=0;i<100;i++){
     document.getElementById("stars").appendChild(star);
 }
 
-/* Corazones flotando */
+/* Corazones */
 function crearCorazones(){
     const container=document.getElementById("floatingHearts");
     setInterval(()=>{
@@ -245,11 +244,10 @@ function crearCorazones(){
 }
 crearCorazones();
 
-/* Llenar corazón */
+/* Corazón Ali */
 function llenarCorazon(){
     const heart=document.getElementById("heartAli");
-    let total=420;
-    for(let i=0;i<total;i++){
+    for(let i=0;i<420;i++){
         const span=document.createElement("span");
         span.textContent="Ali";
         heart.appendChild(span);
@@ -258,7 +256,7 @@ function llenarCorazon(){
 }
 llenarCorazon();
 
-/* Cambiar escena */
+/* Escenas */
 function cambiarEscena(id){
     document.querySelectorAll(".scene").forEach(s=>s.classList.remove("active"));
     document.getElementById(id).classList.add("active");
@@ -269,17 +267,30 @@ function abrirCarta(){
     escribirCarta();
 }
 
-/* Carta */
+/* Carta ORIGINAL COMPLETA */
 function escribirCarta(){
 const texto=`Hola mi amor 💕,
 
 Desde aquel 21 de mayo de 2025, cada día a tu lado ha sido un regalo
-que nunca imaginé...
+que nunca imaginé. Tu risa ilumina mis días más oscuros,
+y tu abrazo me hace sentir en casa sin importar dónde estemos.
+
+Cada momento contigo es un tesoro: desde nuestras pequeñas conversaciones
+hasta nuestras aventuras locas, todo me recuerda
+lo afortunado que soy de tenerte en mi vida.
+
+Gracias por tu paciencia, por tus abrazos inesperados,
+por tus sonrisas que curan todo y por cada detalle que demuestra
+lo increíble que eres.
+
+Eres mi paz, mi alegría, mi compañera de aventuras,
+y si pudiera elegir mil vidas, en todas te elegiría a ti.
 
 Eres mi razón ❤️`;
 
 let i=0;
 const cont=document.getElementById("textoCarta");
+
 const writer=setInterval(()=>{
     cont.innerHTML+=texto.charAt(i)==="\n"?"<br>":texto.charAt(i);
     i++;
