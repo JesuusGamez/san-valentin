@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nuestra Historia ❤️</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap');
+
+body{
+    margin:0;
+    font-family:'Roboto', sans-serif;
+    background:#ffcad4;
+    overflow:hidden;
+    color:white;
+}
+
+/* Fondo */
+#background{
+    position:fixed;
+    inset:0;
+    background: linear-gradient(135deg, #ff9aa2, #ffb7b2);
+    z-index:0;
+    transition: transform 1s ease;
+}
+
+/* Estrellas */
+#stars{
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:1;
+}
+.star{
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    opacity:0.8;
+    animation:twinkle 2s infinite alternate;
+}
+@keyframes twinkle{
+    from{opacity:0.3;}
+    to{opacity:1;}
+}
+
+/* ===== CORAZONES FLOTANDO ===== */
+#floatingHearts{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+}
+
+.floating-heart{
+    position:absolute;
+    bottom:-50px;
+    color:rgba(255,255,255,0.7);
+    font-size:20px;
+    animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    0%{
+        transform:translateY(0) scale(1);
+        opacity:0.8;
+    }
+    100%{
+        transform:translateY(-110vh) scale(1.5);
+        opacity:0;
+    }
+}
+
+/* Escenas */
+.scene{
+    position:absolute;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1s ease, transform 1s ease;
+    transform:scale(1.05);
+    z-index:2;
+}
+.scene.active{
+    opacity:1;
+    pointer-events:auto;
+    transform:scale(1);
+}
+
+/* Botón */
+button{
+    padding:15px 35px;
+    font-size:18px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(45deg,#ff4d6d,#ff9aa2);
+    color:white;
+    cursor:pointer;
+    margin-top:20px;
+}
+button:hover{ transform:scale(1.1); }
+
+/* ========================= */
+/* CORAZÓN DE TEXTO "ALI" */
+/* ========================= */
+
+.heart-name-container{
+    width:480px;        /* MÁS GRANDE */
+    height:420px;       /* MÁS GRANDE */
+    margin:25px 0;
+    position:relative;
+    animation:latidoCorazon 1.4s infinite ease-in-out;
+}
+
+.heart-name{
+    width:100%;
+    height:100%;
+    position:absolute;
+    clip-path: path("M240 400 L60 200 A110 110 0 0 1 240 90 A110 110 0 0 1 420 200 Z");
+    display:flex;
+    flex-wrap:wrap;
+    align-content:flex-start;
+    justify-content:center;
+}
+
+.heart-name span{
+    font-size:28px;   /* TEXTO MÁS GRANDE */
+    color:#ff1744;
+    margin:4px 7px;
+    opacity:0;
+    transform:scale(0.3);
+    transition:all .4s ease;
+    user-select:none;
+}
+
+.heart-name span.show{
+    opacity:1;
+    transform:scale(1);
+}
+
+@keyframes latidoCorazon{
+    0%{ transform:scale(1); }
+    50%{ transform:scale(1.12); }
+    100%{ transform:scale(1); }
+}
+
+/* Carta */
+.card{
+    background: linear-gradient(145deg, #fff5f7, #ffd1dc);
+    padding:40px;
+    border-radius:25px;
+    width:650px;
+    height:770px;
+    overflow:hidden;
+    box-shadow:0 0 50px rgba(255,77,109,0.6);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    line-height:1.7;
+    color:#b7004f;
+}
+
+#textoCarta{
+    font-family:'Playfair Display', serif;
+    font-size:20px;
+    overflow:auto;
+    flex-grow:1;
+}
+
+.latido{
+    display:inline-block;
+    animation:latir 1s infinite;
+}
+@keyframes latir{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.2);}
+    100%{transform:scale(1);}
+}
+
+#contador{
+    font-size:28px;
+    color:#ff4d6d;
+    font-weight:bold;
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+
+<div id="background"></div>
+<div id="stars"></div>
+<div id="floatingHearts"></div>
+
+<audio id="musica" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<div class="scene active" id="inicio">
+    <h1>Feliz San Valentín ❤️</h1>
+
+    <div class="heart-name-container">
+        <div class="heart-name" id="heartAli"></div>
+    </div>
+
+    <button onclick="abrirCarta()">Abrir mi carta 💌</button>
+</div>
+
+<div class="scene" id="carta">
+    <div class="card" id="cardContent">
+        <div id="textoCarta"></div>
+        <button id="btnHistoria" style="display:none"
+            onclick="irContador()">Ver nuestra historia ⏳</button>
+    </div>
+</div>
+
+<div class="scene" id="escenaContador">
+    <h2>Nuestra historia empezó hace…</h2>
+    <div id="contador">Calculando...</div>
+</div>
+
+<script>
+
+/* Estrellas */
+for(let i=0;i<100;i++){
+    let star=document.createElement("div");
+    star.className="star";
+    star.style.top=Math.random()*100+"%";
+    star.style.left=Math.random()*100+"%";
+    document.getElementById("stars").appendChild(star);
+}
+
+/* Corazones flotando */
+function crearCorazones(){
+    const container=document.getElementById("floatingHearts");
+    setInterval(()=>{
+        const heart=document.createElement("div");
+        heart.className="floating-heart";
+        heart.innerHTML="❤";
+        heart.style.left=Math.random()*100+"%";
+        heart.style.fontSize=(15+Math.random()*25)+"px";
+        heart.style.animationDuration=(4+Math.random()*4)+"s";
+        container.appendChild(heart);
+        setTimeout(()=>heart.remove(),8000);
+    },500);
+}
+crearCorazones();
+
+/* Llenar corazón */
+function llenarCorazon(){
+    const heart=document.getElementById("heartAli");
+    let total=520;   /* MÁS TEXTO PARA LLENAR CORAZÓN GRANDE */
+
+    for(let i=0;i<total;i++){
+        const span=document.createElement("span");
+        span.textContent="Ali";
+        heart.appendChild(span);
+
+        setTimeout(()=>{
+            span.classList.add("show");
+        }, i*20);
+    }
+}
+llenarCorazon();
+
+/* Cambiar escena */
+function cambiarEscena(id){
+    document.querySelectorAll(".scene").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+/* Abrir carta */
+function abrirCarta(){
+    document.getElementById("musica").play().catch(()=>{});
+    cambiarEscena("carta");
+    escribirCarta();
+}
+
+/* Carta */
+function escribirCarta(){
+const texto=`Hola mi amor 💕,
+
+Desde aquel 21 de mayo de 2025, cada día a tu lado ha sido un regalo
+que nunca imaginé. Tu risa ilumina mis días más oscuros,
+y tu abrazo me hace sentir en casa sin importar dónde estemos.
+
+Cada momento contigo es un tesoro: desde nuestras pequeñas conversaciones
+hasta nuestras aventuras locas, todo me recuerda
+lo afortunado que soy de tenerte en mi vida.
+
+Gracias por tu paciencia, por tus abrazos inesperados,
+por tus sonrisas que curan todo y por cada detalle que demuestra
+lo increíble que eres. 
+
+Eres mi paz, mi alegría, mi compañera de aventuras,
+y si pudiera elegir mil vidas, en todas te elegiría a ti.
+
+Eres mi razón ❤️`;
+
+let i=0;
+const cont=document.getElementById("textoCarta");
+
+const writer=setInterval(()=>{
+    cont.innerHTML+=texto.charAt(i)==="\n"?"<br>":texto.charAt(i);
+    i++;
+    if(i>=texto.length){
+        clearInterval(writer);
+        cont.innerHTML=cont.innerHTML.replace(
+            "Eres mi razón ❤️",
+            "<span class='latido'>Eres mi razón ❤️</span>"
+        );
+        document.getElementById("btnHistoria").style.display="inline-block";
+    }
+},60);
+}
+
+/* Contador */
+function irContador(){
+    cambiarEscena("escenaContador");
+}
+
+function actualizarContador(){
+    const inicio=new Date("2025-05-21T00:00:00");
+    const ahora=new Date();
+    const diff=ahora-inicio;
+
+    const dias=Math.floor(diff/(1000*60*60*24));
+    const horas=Math.floor((diff/(1000*60*60))%24);
+    const minutos=Math.floor((diff/(1000*60))%60);
+    const segundos=Math.floor((diff/1000)%60);
+
+    document.getElementById("contador").innerText=
+        `${dias} días, ${horas} horas, ${minutos} minutos y ${segundos} segundos ❤️`;
+
+    const bg=document.getElementById("background");
+    const scale=1 + Math.sin(Date.now()/500)*0.02;
+    bg.style.transform=`scale(${scale})`;
+}
+setInterval(actualizarContador,1000);
+actualizarContador();
+
+</script>
+</body>
+</html>
