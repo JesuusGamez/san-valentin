@@ -137,7 +137,7 @@ button{
     display:flex;
     flex-direction:column;
     box-shadow:0 30px 60px rgba(0,0,0,0.35);
-    color:#b7004f;
+    color:#fff;
 
     opacity:0;
     transform:translateY(80px) scale(0.9);
@@ -167,6 +167,8 @@ button{
     line-height:1.7;
     overflow-y:auto;
     flex:1;
+    color:white;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5); /* contorno */
 }
 
 .latidoTexto{
@@ -177,6 +179,18 @@ button{
     0%{transform:scale(1);}
     50%{transform:scale(1.25);}
     100%{transform:scale(1);}
+}
+
+/* ===== FUEGOS ARTIFICIALES CORAZONES ===== */
+.firework-heart{
+    position:absolute;
+    font-size:18px;
+    opacity:1;
+    animation:firework 1.2s ease-out forwards;
+}
+@keyframes firework{
+    0%{transform:translate(0,0) scale(0.5); opacity:1;}
+    100%{transform:translate(var(--x), var(--y)) scale(1.5); opacity:0;}
 }
 
 #contador{
@@ -260,7 +274,7 @@ function abrirCarta(){
     cambiarEscena("carta");
 
     const musica=document.getElementById("musica");
-    musica.currentTime = 53; // empezar en coro
+    musica.currentTime = 13; // empezar en coro
     musica.play().catch(()=>{});
 
     document.getElementById("background").classList.add("cinema");
@@ -271,7 +285,7 @@ function abrirCarta(){
     },400);
 }
 
-/* Carta original escribiéndose poco a poco */
+/* Carta original escribiéndose poco a poco + fuego de corazones al final */
 function escribirCarta(){
 const texto=`Hola mi amor 💕,
 
@@ -280,7 +294,7 @@ que nunca imaginé. Tu risa ilumina mis días más oscuros,
 y tu abrazo me hace sentir en casa sin importar dónde estemos.
 
 Cada momento contigo es un tesoro: desde nuestras pequeñas conversaciones
-hasta nuestras aventuras locas, todo me recuerda
+hasta nuestras pequeñas aventuras, todo me recuerda
 lo afortunado que soy de tenerte en mi vida.
 
 Gracias por tu paciencia, por tus abrazos inesperados,
@@ -305,6 +319,21 @@ const writer=setInterval(()=>{
             "<span class='latidoTexto'>Eres mi razón ❤️</span>"
         );
         document.getElementById("btnHistoria").style.display="inline-block";
+
+        // FUEGOS ARTIFICIALES CORAZONES
+        for(let j=0;j<20;j++){
+            const f=document.createElement("div");
+            f.className="firework-heart";
+            f.innerHTML="❤";
+            const x=(Math.random()-0.5)*200 + "px";
+            const y=(Math.random()-0.5)*200 + "px";
+            f.style.setProperty('--x',x);
+            f.style.setProperty('--y',y);
+            f.style.left="50%";
+            f.style.top="50%";
+            document.getElementById("card").appendChild(f);
+            setTimeout(()=>f.remove(),1500);
+        }
     }
 },35);
 }
@@ -333,3 +362,4 @@ actualizarContador();
 </script>
 </body>
 </html>
+
