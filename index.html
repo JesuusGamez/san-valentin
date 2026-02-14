@@ -127,7 +127,7 @@ button{
 /* ===== CARTA CINEMÁTICA ===== */
 .card{
     position:relative;
-    background: linear-gradient(145deg, #fff5f7, #ffd1dc);
+    background: #ffffff; /* fondo blanco sólido */
     width:100%;
     max-width:480px;
     height:85dvh;
@@ -137,28 +137,22 @@ button{
     display:flex;
     flex-direction:column;
     box-shadow:0 30px 60px rgba(0,0,0,0.35);
-    color:#fff;
+    color:#ff1744; /* texto rojo fuerte */
 
     opacity:0;
     transform:translateY(80px) scale(0.9);
     transition:all 1.5s cubic-bezier(.23,1.01,.32,1);
 }
+
 .card::before{
     content:"";
     position:absolute;
     inset:-20px;
     border-radius:40px;
-    background:radial-gradient(circle, rgba(255,77,109,0.4), transparent 70%);
+    background:radial-gradient(circle, rgba(255,77,109,0.2), transparent 70%);
     z-index:-1;
     opacity:0;
     transition:opacity 2s ease;
-}
-.card.mostrar{
-    opacity:1;
-    transform:translateY(0) scale(1);
-}
-.card.mostrar::before{
-    opacity:1;
 }
 
 #textoCarta{
@@ -175,6 +169,13 @@ button{
         1px 1px 0 #ffffff; /* contorno blanco */
 }
 
+.card.mostrar{
+    opacity:1;
+    transform:translateY(0) scale(1);
+}
+.card.mostrar::before{
+    opacity:1;
+}
 
 
 .latidoTexto{
