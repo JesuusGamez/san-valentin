@@ -45,7 +45,7 @@ body{
     to{opacity:1;}
 }
 
-/* ===== CORAZONES FLOTANDO ===== */
+/* Corazones flotando */
 #floatingHearts{
     position:fixed;
     width:100%;
@@ -56,7 +56,6 @@ body{
     overflow:hidden;
     z-index:1;
 }
-
 .floating-heart{
     position:absolute;
     bottom:-50px;
@@ -64,16 +63,9 @@ body{
     font-size:20px;
     animation:floatUp linear infinite;
 }
-
 @keyframes floatUp{
-    0%{
-        transform:translateY(0) scale(1);
-        opacity:0.8;
-    }
-    100%{
-        transform:translateY(-110vh) scale(1.5);
-        opacity:0;
-    }
+    0%{transform:translateY(0) scale(1);opacity:0.8;}
+    100%{transform:translateY(-110vh) scale(1.5);opacity:0;}
 }
 
 /* Escenas */
@@ -90,6 +82,7 @@ body{
     transition:opacity 1s ease, transform 1s ease;
     transform:scale(1.05);
     z-index:2;
+    padding:20px;
 }
 .scene.active{
     opacity:1;
@@ -99,8 +92,8 @@ body{
 
 /* Botón */
 button{
-    padding:15px 35px;
-    font-size:18px;
+    padding:14px 28px;
+    font-size:16px;
     border:none;
     border-radius:40px;
     background:linear-gradient(45deg,#ff4d6d,#ff9aa2);
@@ -108,75 +101,68 @@ button{
     cursor:pointer;
     margin-top:20px;
 }
-button:hover{ transform:scale(1.1); }
+button:hover{ transform:scale(1.05); }
 
-/* ========================= */
-/* CORAZÓN DE TEXTO "ALI" */
-/* ========================= */
-
+/* Corazón texto */
 .heart-name-container{
-    width:480px;        /* MÁS GRANDE */
-    height:420px;       /* MÁS GRANDE */
-    margin:25px 0;
+    width:90vw;
+    max-width:420px;
+    height:380px;
+    margin:20px 0;
     position:relative;
     animation:latidoCorazon 1.4s infinite ease-in-out;
 }
-
 .heart-name{
     width:100%;
     height:100%;
     position:absolute;
-    clip-path: path("M240 400 L60 200 A110 110 0 0 1 240 90 A110 110 0 0 1 420 200 Z");
+    clip-path: path("M210 360 L50 180 A90 90 0 0 1 210 80 A90 90 0 0 1 370 180 Z");
     display:flex;
     flex-wrap:wrap;
     align-content:flex-start;
     justify-content:center;
 }
-
 .heart-name span{
-    font-size:28px;   /* TEXTO MÁS GRANDE */
+    font-size:20px;
     color:#ff1744;
-    margin:4px 7px;
+    margin:3px 5px;
     opacity:0;
     transform:scale(0.3);
     transition:all .4s ease;
     user-select:none;
 }
-
 .heart-name span.show{
     opacity:1;
     transform:scale(1);
 }
-
 @keyframes latidoCorazon{
     0%{ transform:scale(1); }
-    50%{ transform:scale(1.12); }
+    50%{ transform:scale(1.08); }
     100%{ transform:scale(1); }
 }
 
 /* Carta */
 .card{
     background: linear-gradient(145deg, #fff5f7, #ffd1dc);
-    padding:40px;
+    padding:25px;
     border-radius:25px;
-    width:650px;
-    height:770px;
+    width:95vw;
+    max-width:600px;
+    height:80vh;
     overflow:hidden;
-    box-shadow:0 0 50px rgba(255,77,109,0.6);
+    box-shadow:0 0 30px rgba(255,77,109,0.6);
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    line-height:1.7;
+    line-height:1.6;
     color:#b7004f;
 }
-
 #textoCarta{
     font-family:'Playfair Display', serif;
-    font-size:20px;
+    font-size:16px;
     overflow:auto;
     flex-grow:1;
 }
-
 .latido{
     display:inline-block;
     animation:latir 1s infinite;
@@ -186,9 +172,8 @@ button:hover{ transform:scale(1.1); }
     50%{transform:scale(1.2);}
     100%{transform:scale(1);}
 }
-
 #contador{
-    font-size:28px;
+    font-size:20px;
     color:#ff4d6d;
     font-weight:bold;
     margin-top:20px;
@@ -201,8 +186,9 @@ button:hover{ transform:scale(1.1); }
 <div id="stars"></div>
 <div id="floatingHearts"></div>
 
-<audio id="musica" loop>
-<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+<!-- 🎵 CANCIÓN -->
+<audio id="musica" autoplay loop>
+<source src="the-reason.mp3" type="audio/mpeg">
 </audio>
 
 <div class="scene active" id="inicio">
@@ -216,7 +202,7 @@ button:hover{ transform:scale(1.1); }
 </div>
 
 <div class="scene" id="carta">
-    <div class="card" id="cardContent">
+    <div class="card">
         <div id="textoCarta"></div>
         <button id="btnHistoria" style="display:none"
             onclick="irContador()">Ver nuestra historia ⏳</button>
@@ -229,6 +215,10 @@ button:hover{ transform:scale(1.1); }
 </div>
 
 <script>
+window.addEventListener("load", ()=>{
+    const musica=document.getElementById("musica");
+    musica.play().catch(()=>{});
+});
 
 /* Estrellas */
 for(let i=0;i<100;i++){
@@ -258,16 +248,12 @@ crearCorazones();
 /* Llenar corazón */
 function llenarCorazon(){
     const heart=document.getElementById("heartAli");
-    let total=520;   /* MÁS TEXTO PARA LLENAR CORAZÓN GRANDE */
-
+    let total=420;
     for(let i=0;i<total;i++){
         const span=document.createElement("span");
         span.textContent="Ali";
         heart.appendChild(span);
-
-        setTimeout(()=>{
-            span.classList.add("show");
-        }, i*20);
+        setTimeout(()=>span.classList.add("show"), i*15);
     }
 }
 llenarCorazon();
@@ -278,9 +264,7 @@ function cambiarEscena(id){
     document.getElementById(id).classList.add("active");
 }
 
-/* Abrir carta */
 function abrirCarta(){
-    document.getElementById("musica").play().catch(()=>{});
     cambiarEscena("carta");
     escribirCarta();
 }
@@ -290,25 +274,12 @@ function escribirCarta(){
 const texto=`Hola mi amor 💕,
 
 Desde aquel 21 de mayo de 2025, cada día a tu lado ha sido un regalo
-que nunca imaginé. Tu risa ilumina mis días más oscuros,
-y tu abrazo me hace sentir en casa sin importar dónde estemos.
-
-Cada momento contigo es un tesoro: desde nuestras pequeñas conversaciones
-hasta nuestras aventuras locas, todo me recuerda
-lo afortunado que soy de tenerte en mi vida.
-
-Gracias por tu paciencia, por tus abrazos inesperados,
-por tus sonrisas que curan todo y por cada detalle que demuestra
-lo increíble que eres. 
-
-Eres mi paz, mi alegría, mi compañera de aventuras,
-y si pudiera elegir mil vidas, en todas te elegiría a ti.
+que nunca imaginé...
 
 Eres mi razón ❤️`;
 
 let i=0;
 const cont=document.getElementById("textoCarta");
-
 const writer=setInterval(()=>{
     cont.innerHTML+=texto.charAt(i)==="\n"?"<br>":texto.charAt(i);
     i++;
@@ -320,7 +291,7 @@ const writer=setInterval(()=>{
         );
         document.getElementById("btnHistoria").style.display="inline-block";
     }
-},60);
+},40);
 }
 
 /* Contador */
@@ -340,10 +311,6 @@ function actualizarContador(){
 
     document.getElementById("contador").innerText=
         `${dias} días, ${horas} horas, ${minutos} minutos y ${segundos} segundos ❤️`;
-
-    const bg=document.getElementById("background");
-    const scale=1 + Math.sin(Date.now()/500)*0.02;
-    bg.style.transform=`scale(${scale})`;
 }
 setInterval(actualizarContador,1000);
 actualizarContador();
