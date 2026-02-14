@@ -34,7 +34,26 @@ html,body{
     transform:scale(1.1);
 }
 
-/* Escenas */
+/* ===== CORAZONES FLOTANDO ===== */
+#floatingHearts{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:1;
+}
+.floating-heart{
+    position:absolute;
+    bottom:-50px;
+    color:rgba(255,255,255,0.7);
+    animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+    0%{transform:translateY(0) scale(1);opacity:0.8;}
+    100%{transform:translateY(-110vh) scale(1.5);opacity:0;}
+}
+
+/* ===== ESCENAS ===== */
 .scene{
     position:absolute;
     inset:0;
@@ -54,7 +73,7 @@ html,body{
     pointer-events:auto;
 }
 
-/* Botón elegante */
+/* ===== BOTÓN ===== */
 button{
     padding:14px 30px;
     font-size:16px;
@@ -65,11 +84,9 @@ button{
     cursor:pointer;
     margin-top:20px;
     box-shadow:0 8px 20px rgba(0,0,0,0.2);
-    transition:all .3s ease;
 }
-button:active{ transform:scale(0.95); }
 
-/* Corazón */
+/* ===== CORAZÓN "ALI" ===== */
 .heart-name-container{
     width:80vw;
     max-width:350px;
@@ -82,6 +99,29 @@ button:active{ transform:scale(0.95); }
     0%{ transform:scale(1); }
     50%{ transform:scale(1.07); }
     100%{ transform:scale(1); }
+}
+
+.heart-name{
+    width:100%;
+    height:100%;
+    position:absolute;
+    clip-path: path("M180 280 L40 140 A75 75 0 0 1 180 60 A75 75 0 0 1 320 140 Z");
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.heart-name span{
+    font-size:14px;
+    color:#ff1744;
+    margin:2px 4px;
+    opacity:0;
+    transform:scale(0.5);
+    transition:all .3s ease;
+}
+.heart-name span.show{
+    opacity:1;
+    transform:scale(1);
 }
 
 /* ===== CARTA CINEMÁTICA ===== */
@@ -103,8 +143,6 @@ button:active{ transform:scale(0.95); }
     transform:translateY(80px) scale(0.9);
     transition:all 1.5s cubic-bezier(.23,1.01,.32,1);
 }
-
-/* LUZ detrás */
 .card::before{
     content:"";
     position:absolute;
@@ -115,7 +153,6 @@ button:active{ transform:scale(0.95); }
     opacity:0;
     transition:opacity 2s ease;
 }
-
 .card.mostrar{
     opacity:1;
     transform:translateY(0) scale(1);
@@ -130,11 +167,6 @@ button:active{ transform:scale(0.95); }
     line-height:1.7;
     overflow-y:auto;
     flex:1;
-    opacity:0;
-    transition:opacity 3s ease;
-}
-#textoCarta.visible{
-    opacity:1;
 }
 
 .latidoTexto{
@@ -157,6 +189,7 @@ button:active{ transform:scale(0.95); }
 <body>
 
 <div id="background"></div>
+<div id="floatingHearts"></div>
 
 <audio id="musica" loop>
 <source src="the-reason.mp3" type="audio/mpeg">
@@ -164,6 +197,11 @@ button:active{ transform:scale(0.95); }
 
 <div class="scene active" id="inicio">
     <h1>Feliz San Valentín ❤️</h1>
+
+    <div class="heart-name-container">
+        <div class="heart-name" id="heartAli"></div>
+    </div>
+
     <button onclick="abrirCarta()">Abrir mi carta 💌</button>
 </div>
 
@@ -187,18 +225,44 @@ window.addEventListener("load",()=>{
     setTimeout(()=>window.scrollTo(0,1),100);
 });
 
-/* Abrir carta ÉPICO */
-function abrirCarta(){
+/* Corazones flotando */
+setInterval(()=>{
+    const heart=document.createElement("div");
+    heart.className="floating-heart";
+    heart.innerHTML="❤";
+    heart.style.left=Math.random()*100+"%";
+    heart.style.fontSize=(14+Math.random()*18)+"px";
+    heart.style.animationDuration=(4+Math.random()*4)+"s";
+    document.getElementById("floatingHearts").appendChild(heart);
+    setTimeout(()=>heart.remove(),8000);
+},500);
 
+/* Corazón ALI */
+function llenarCorazon(){
+    const heart=document.getElementById("heartAli");
+    for(let i=0;i<350;i++){
+        const span=document.createElement("span");
+        span.textContent="Ali";
+        heart.appendChild(span);
+        setTimeout(()=>span.classList.add("show"), i*10);
+    }
+}
+llenarCorazon();
+
+/* Escenas */
+function cambiarEscena(id){
+    document.querySelectorAll(".scene").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+/* Abrir carta */
+function abrirCarta(){
     cambiarEscena("carta");
 
     const musica=document.getElementById("musica");
-
-    /* 🎵 Empezar en el coro (aprox segundo 53) */
-    musica.currentTime = 53;
+    musica.currentTime = 53; // empezar en coro
     musica.play().catch(()=>{});
 
-    /* Activar modo cine */
     document.getElementById("background").classList.add("cinema");
 
     setTimeout(()=>{
@@ -207,13 +271,7 @@ function abrirCarta(){
     },400);
 }
 
-/* Escenas */
-function cambiarEscena(id){
-    document.querySelectorAll(".scene").forEach(s=>s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
-
-/* Carta */
+/* Carta original escribiéndose poco a poco */
 function escribirCarta(){
 const texto=`Hola mi amor 💕,
 
@@ -227,24 +285,28 @@ lo afortunado que soy de tenerte en mi vida.
 
 Gracias por tu paciencia, por tus abrazos inesperados,
 por tus sonrisas que curan todo y por cada detalle que demuestra
-lo increíble que eres.
+lo increíble que eres. 
 
 Eres mi paz, mi alegría, mi compañera de aventuras,
 y si pudiera elegir mil vidas, en todas te elegiría a ti.
 
 Eres mi razón ❤️`;
 
+let i=0;
 const cont=document.getElementById("textoCarta");
-cont.innerHTML=texto.replace(/\n/g,"<br>");
-cont.classList.add("visible");
 
-setTimeout(()=>{
-    cont.innerHTML=cont.innerHTML.replace(
-        "Eres mi razón ❤️",
-        "<span class='latidoTexto'>Eres mi razón ❤️</span>"
-    );
-    document.getElementById("btnHistoria").style.display="inline-block";
-},3000);
+const writer=setInterval(()=>{
+    cont.innerHTML+=texto.charAt(i)==="\n"?"<br>":texto.charAt(i);
+    i++;
+    if(i>=texto.length){
+        clearInterval(writer);
+        cont.innerHTML=cont.innerHTML.replace(
+            "Eres mi razón ❤️",
+            "<span class='latidoTexto'>Eres mi razón ❤️</span>"
+        );
+        document.getElementById("btnHistoria").style.display="inline-block";
+    }
+},35);
 }
 
 /* Contador */
